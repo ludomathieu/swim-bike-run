@@ -1,14 +1,18 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Bike, Footprints, Waves } from "lucide-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  LayoutAnimation,
+  Platform,
   SafeAreaView,
-  SectionList,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
+  UIManager,
   View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type CategoryKey = "Swim" | "Bike" | "Run";
 
@@ -57,6 +61,15 @@ const TriathlonChecklistScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (
+      Platform.OS === "android" &&
+      UIManager.setLayoutAnimationEnabledExperimental
+    ) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }, []);
+
+  useEffect(() => {
     const loadState = async () => {
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
@@ -83,6 +96,7 @@ const TriathlonChecklistScreen: React.FC = () => {
 
   const toggleItem = useCallback(
     (itemId: string) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setChecked((prev) => {
         const next = { ...prev, [itemId]: !prev[itemId] };
         void persistState(next);
@@ -98,19 +112,6 @@ const TriathlonChecklistScreen: React.FC = () => {
       color: CATEGORY_COLORS[category],
       data: ALL_ITEMS.filter((item) => item.category === category),
     }),
-  );
-
-  const renderSectionHeader = ({
-    section,
-  }: {
-    section: { title: CategoryKey; color: string };
-  }) => (
-    <View style={styles.sectionHeaderContainer}>
-      <View
-        style={[styles.sectionColorDot, { backgroundColor: section.color }]}
-      />
-      <Text style={styles.sectionTitle}>{section.title}</Text>
-    </View>
   );
 
   const renderItem = ({ item }: { item: ChecklistItem }) => {
@@ -155,16 +156,42 @@ const TriathlonChecklistScreen: React.FC = () => {
           Prépare ton matériel pour être serein le jour J.
         </Text>
 
-        <SectionList
-          sections={sections}
-          keyExtractor={(item) => item.id}
-          renderSectionHeader={renderSectionHeader}
-          renderItem={renderItem}
+        <ScrollView
           contentContainerStyle={styles.listContent}
-          stickySectionHeadersEnabled={false}
           showsVerticalScrollIndicator={false}
-          extraData={checked}
-        />
+        >
+          {sections.map((section) => (
+            <View key={section.title} style={styles.sectionCard}>
+              <View style={styles.sectionHeaderContainer}>
+                <View
+                  style={[
+                    styles.sectionIconBadge,
+                    { backgroundColor: section.color },
+                  ]}
+                >
+                  {section.title === "Swim" && (
+                    <Waves color="#FFFFFF" size={18} strokeWidth={2.4} />
+                  )}
+                  {section.title === "Bike" && (
+                    <Bike color="#FFFFFF" size={18} strokeWidth={2.4} />
+                  )}
+                  {section.title === "Run" && (
+                    <Footprints color="#FFFFFF" size={18} strokeWidth={2.4} />
+                  )}
+                </View>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+              </View>
+
+              <View style={styles.sectionItemsContainer}>
+                {section.data.map((item) => (
+                  <View key={item.id} style={styles.sectionItemWrapper}>
+                    {renderItem({ item })}
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
+        </ScrollView>
 
         {isLoading && (
           <View style={styles.loadingOverlay}>
@@ -192,49 +219,52 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: "#111827",
+    fontFamily: "System",
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 15,
     color: "#6B7280",
+    fontFamily: "System",
     marginBottom: 24,
   },
   listContent: {
+    paddingTop: 4,
     paddingBottom: 32,
   },
   sectionHeaderContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
-    marginBottom: 8,
   },
-  sectionColorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 8,
+  sectionIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     color: "#111827",
+    fontFamily: "System",
   },
   itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+    backgroundColor: "#F9FAFB",
+    borderRadius: 18,
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    paddingHorizontal: 18,
   },
   itemContainerChecked: {
-    opacity: 0.5,
+    backgroundColor: "#E5E7EB",
   },
   checkbox: {
     width: 22,
@@ -259,10 +289,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#111827",
     fontWeight: "500",
+    fontFamily: "System",
   },
   itemLabelChecked: {
     textDecorationLine: "line-through",
-    color: "#6B7280",
+    textDecorationStyle: "solid",
+    textDecorationColor: "#9CA3AF",
+    color: "#9CA3AF",
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -273,6 +306,25 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 16,
     color: "#6B7280",
+    fontFamily: "System",
+  },
+  sectionCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 22,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.07,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  sectionItemsContainer: {
+    marginTop: 8,
+  },
+  sectionItemWrapper: {
+    marginBottom: 8,
   },
 });
 
