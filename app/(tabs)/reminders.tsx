@@ -1,15 +1,18 @@
-import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
 import {
+  FlatList,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   View,
-  FlatList,
-  Platform,
 } from "react-native";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+
+const RACE_DATE_STORAGE_KEY = "@triathlon_race_date";
 
 interface Reminder {
   id: string;
@@ -21,10 +24,30 @@ interface Reminder {
 const RemindersScreen: React.FC = () => {
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme ?? "light"];
+  const [raceDateStr, setRaceDateStr] = useState<string | null>(null);
 
-  // Simulation d'une date de course (aujourd'hui + 10 jours)
-  const raceDate = new Date();
-  raceDate.setDate(raceDate.getDate() + 10);
+  useFocusEffect(
+    useCallback(() => {
+      const loadRaceDate = async () => {
+        try {
+          const stored = await AsyncStorage.getItem(RACE_DATE_STORAGE_KEY);
+          setRaceDateStr(stored);
+        } catch (error) {
+          console.warn("Failed to load race date in reminders", error);
+        }
+      };
+      loadRaceDate();
+    }, []),
+  );
+
+  // Simulation d'une date de course (aujourd'hui + 10 jours) si non définie
+  let raceDate: Date;
+  if (raceDateStr && !isNaN(Date.parse(raceDateStr))) {
+    raceDate = new Date(raceDateStr);
+  } else {
+    raceDate = new Date();
+    raceDate.setDate(raceDate.getDate() + 10);
+  }
 
   const reminders: Reminder[] = [
     {
@@ -47,7 +70,11 @@ const RemindersScreen: React.FC = () => {
     },
   ];
 
-  reminders.forEach((r) => r.date.setDate(raceDate.getDate() - r.daysBefore));
+  reminders.forEach((r) => {
+    const d = new Date(raceDate);
+    d.setDate(raceDate.getDate() - r.daysBefore);
+    r.date = d;
+  });
 
   const renderReminder = ({ item }: { item: Reminder }) => (
     <View
@@ -62,6 +89,7 @@ const RemindersScreen: React.FC = () => {
       </View>
       <Text style={styles.reminderDate}>
         {item.date.toLocaleDateString("fr-FR", {
+          weekday: "long",
           day: "numeric",
           month: "long",
         })}
