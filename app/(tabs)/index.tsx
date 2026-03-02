@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Bike, Footprints, Waves } from "lucide-react-native";
+import { Bike, Calendar, Footprints, Waves } from "lucide-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   LayoutAnimation,
@@ -9,6 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   UIManager,
   View,
@@ -37,6 +38,7 @@ const CATEGORY_COLORS: Record<CategoryKey, string> = {
 };
 
 const STORAGE_KEY = "@triathlon_checklist_state";
+const RACE_DATE_STORAGE_KEY = "@triathlon_race_date";
 
 const buildItems = (): ChecklistItem[] => {
   const items: ChecklistItem[] = [];
@@ -58,6 +60,7 @@ const ALL_ITEMS = buildItems();
 
 const TriathlonChecklistScreen: React.FC = () => {
   const [checked, setChecked] = useState<ChecklistState>({});
+  const [raceDate, setRaceDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -72,12 +75,19 @@ const TriathlonChecklistScreen: React.FC = () => {
   useEffect(() => {
     const loadState = async () => {
       try {
-        const stored = await AsyncStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          setChecked(JSON.parse(stored));
+        const [storedChecklist, storedRaceDate] = await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEY),
+          AsyncStorage.getItem(RACE_DATE_STORAGE_KEY),
+        ]);
+
+        if (storedChecklist) {
+          setChecked(JSON.parse(storedChecklist));
+        }
+        if (storedRaceDate) {
+          setRaceDate(storedRaceDate);
         }
       } catch (error) {
-        console.warn("Failed to load checklist state", error);
+        console.warn("Failed to load state", error);
       } finally {
         setIsLoading(false);
       }
@@ -105,6 +115,15 @@ const TriathlonChecklistScreen: React.FC = () => {
     },
     [persistState],
   );
+
+  const handleRaceDateChange = useCallback(async (date: string) => {
+    setRaceDate(date);
+    try {
+      await AsyncStorage.setItem(RACE_DATE_STORAGE_KEY, date);
+    } catch (error) {
+      console.warn("Failed to save race date", error);
+    }
+  }, []);
 
   const sections = (Object.keys(CHECKLIST_DATA) as CategoryKey[]).map(
     (category) => ({
@@ -155,6 +174,21 @@ const TriathlonChecklistScreen: React.FC = () => {
         <Text style={styles.subtitle}>
           Prépare ton matériel pour être serein le jour J.
         </Text>
+
+        <View style={styles.datePickerContainer}>
+          <View style={styles.datePickerHeader}>
+            <Calendar size={18} color="#0A84FF" style={styles.dateIcon} />
+            <Text style={styles.datePickerLabel}>Ma date de course</Text>
+          </View>
+          <TextInput
+            style={styles.dateInput}
+            value={raceDate}
+            onChangeText={handleRaceDateChange}
+            placeholder="Ex: 2025-05-12"
+            placeholderTextColor="#9CA3AF"
+            keyboardType="default"
+          />
+        </View>
 
         <ScrollView
           contentContainerStyle={styles.listContent}
@@ -226,7 +260,41 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#6B7280",
     fontFamily: "System",
+    marginBottom: 20,
+  },
+  datePickerContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    padding: 16,
     marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  datePickerHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  dateIcon: {
+    marginRight: 8,
+  },
+  datePickerLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
+    fontFamily: "System",
+  },
+  dateInput: {
+    backgroundColor: "#F3F4F6",
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: "#111827",
+    fontFamily: "System",
   },
   listContent: {
     paddingTop: 4,
