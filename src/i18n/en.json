@@ -1,0 +1,177 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "reset": "Reset",
+    "continue": "Continue →",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "add": "Add",
+    "edit": "Edit",
+    "close": "Close",
+    "days": "days",
+    "done": "Done"
+  },
+
+  "nav": {
+    "home": "Swim Bike Run",
+    "race_detail": "Race",
+    "checklist": "Gear checklist",
+    "pre_race": "Race eve 🌙",
+    "reminders": "Reminders",
+    "debrief": "Debrief",
+    "history": "History",
+    "profile": "My Account"
+  },
+
+  "onboarding": {
+    "tagline": "Your companion to prepare, experience and analyse every triathlon.",
+    "choose_language": "Choose your language",
+    "step1of2": "STEP 1 OF 2",
+    "step2of2": "STEP 2 OF 2",
+    "tell_us": "Tell us\nabout you.",
+    "first_name": "FIRST NAME",
+    "email": "EMAIL",
+    "optional": "OPTIONAL",
+    "email_hint": "To recover your data if you change device.",
+    "local_storage": "Your data is stored locally on your device. Nothing is sent to a server.",
+    "what_you_need": "Everything\nyou need.",
+    "feature_checklist_title": "Gear checklist",
+    "feature_checklist_sub": "25 items · organised by discipline",
+    "feature_reminders_title": "Smart reminders",
+    "feature_reminders_sub": "Notifications + calendar events",
+    "feature_debrief_title": "Post-race debrief",
+    "feature_debrief_sub": "Time · feeling · analysis · history",
+    "add_first_race": "Add my next race 🏁"
+  },
+
+  "home": {
+    "no_races_title": "No upcoming races",
+    "no_races_sub": "Add your next event!",
+    "days_remaining": "days remaining",
+    "checklist": "Checklist",
+    "reminders": "Reminders",
+    "see": "View →",
+    "add_race": "+ Add a race"
+  },
+
+  "add_race": {
+    "title": "New race",
+    "name_label": "NAME",
+    "name_placeholder": "E.g. Paris Triathlon",
+    "format_label": "FORMAT",
+    "date_label": "DATE",
+    "add_btn": "Add"
+  },
+
+  "race_detail": {
+    "days_remaining": "days remaining",
+    "days_since": "days since the race",
+    "preparation": "Preparation",
+    "delete_title": "Delete this race?",
+    "delete_message": "\"{{name}}\" and all its data will be permanently deleted.",
+    "checklist": "Checklist",
+    "pre_race": "Race eve",
+    "reminders": "Reminders",
+    "debrief": "Debrief",
+    "checklist_sub": "{{done}}/{{total}} items checked",
+    "pre_race_sub": "{{done}}/{{total}} tasks completed",
+    "reminders_sub": "{{count}} reminder(s) scheduled",
+    "debrief_done": "Debrief completed ✓",
+    "debrief_pending": "Fill in after the race"
+  },
+
+  "checklist": {
+    "ready": "ready for the race",
+    "verified": "{{done}}/{{total}} items checked",
+    "swipe_hint": "← Swipe an item to delete it"
+  },
+
+  "pre_race": {
+    "ready": "ready for tomorrow",
+    "completed": "{{done}}/{{total}} tasks completed"
+  },
+
+  "reminders": {
+    "race_label": "RACE",
+    "calendar_title": "Add to calendar",
+    "calendar_active": "\"Swim Bike Run\" calendar active",
+    "calendar_inactive": "Tap to allow access",
+    "calendar_enabled_title": "✅ Calendar enabled",
+    "calendar_enabled_msg": "A \"Swim Bike Run\" calendar has been created.",
+    "permission_denied": "Permission denied",
+    "permission_denied_msg": "Please allow calendar access in your settings.",
+    "auto_reminders": "AUTOMATIC REMINDERS",
+    "scheduled": "SCHEDULED ({{count}})",
+    "cancel_all": "Cancel all",
+    "cancel_confirm_title": "Cancel all reminders?",
+    "cancel_confirm_msg": "Notifications and calendar events will be deleted.",
+    "past_date": "Past date",
+    "past_date_msg": "This deadline has already passed.",
+    "created_title": "✅ Reminder created",
+    "on": "ON",
+    "race_morning": "Race morning",
+    "template_bike": "Service the bike",
+    "template_bag": "Prepare the bag",
+    "template_checklist": "Check the checklist",
+    "template_sleep": "Early night!",
+    "template_nutrition": "Nutrition & hydration",
+    "template_alarm": "Race morning alarm"
+  },
+
+  "debrief": {
+    "total_time": "Total time",
+    "feeling": "FEELING",
+    "analysis": "ANALYSIS",
+    "what_worked": "✅ What went well",
+    "to_improve": "🔧 To improve",
+    "next_goal": "🎯 Next goal",
+    "save": "💾 Save debrief",
+    "saved": "✅ Debrief saved!",
+    "summary": "Summary",
+    "edit": "Edit",
+    "segments": "TIME PER SEGMENT",
+    "global_feeling": "⭐ Overall",
+    "time_placeholder": "00:00:00",
+    "total": "TOTAL"
+  },
+
+  "profile": {
+    "history_title": "HISTORY",
+    "no_history_title": "No completed races",
+    "no_history_sub": "Your past races will appear here",
+    "settings": "SETTINGS",
+    "default_checklist_title": "Default checklist",
+    "default_checklist_sub": "{{count}} items enabled",
+    "default_checklist_hint": "These items will be included in the checklist for each new race.",
+    "equipment_title": "My gear",
+    "equipment_sub": "{{owned}}/{{total}} owned",
+    "equipment_hint": "Mark what you already own to better prepare for your races.",
+    "owned": "Owned",
+    "language_title": "Language",
+    "language_sub": "English",
+    "about_title": "About",
+    "about_sub": "Version 2.0",
+    "about_msg": "Version 2.0\nYour triathlon companion 🏊🚴🏃",
+    "debrief_missing": "Debrief missing",
+    "stats_upcoming": "Upcoming",
+    "stats_done": "Completed",
+    "stats_equipment": "Gear"
+  },
+
+  "language": {
+    "title": "Langue / Language",
+    "french": "Français",
+    "english": "English"
+  },
+
+  "distances": {
+    "S": "Sprint",
+    "M": "Olympic",
+    "L": "Half",
+    "XL": "Ironman"
+  }
+}

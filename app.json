@@ -24,6 +24,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      ["expo-notifications", {
+        "icon": "./assets/icon.png",
+        "color": "#00D4FF"
+      }],
+      ["expo-calendar", {
+        "calendarPermission": "L'app a besoin d'accéder à votre calendrier pour programmer vos rappels de course."
+      }]
+    ]
   }
 }
